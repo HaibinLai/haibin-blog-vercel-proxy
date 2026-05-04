@@ -98,6 +98,14 @@ function getAdminBootstrap(publicOrigin) {
   return `
 <script src="${publicOrigin}/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
 <script src="${publicOrigin}/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<script>
+window.userSettings = window.userSettings || {
+  uid: "0",
+  time: String(Math.floor(Date.now() / 1000)),
+  secure: "1"
+};
+</script>
+<script src="${publicOrigin}/wp-includes/js/utils.min.js?ver=6.9.4"></script>
 <script src="${publicOrigin}/wp-includes/js/dist/hooks.min.js?ver=6.9.4"></script>
 <script src="${publicOrigin}/wp-includes/js/dist/i18n.min.js?ver=6.9.4"></script>
 <script>
@@ -118,6 +126,14 @@ function getAdminBootstrap(publicOrigin) {
     isRTL: function() { return false; }
   };
   window.wp.i18n.sprintf = window.wp.i18n.sprintf || sprintf;
+  window.getUserSetting = window.getUserSetting || function(name, fallback) {
+    return typeof fallback === "undefined" ? "" : fallback;
+  };
+  window.setUserSetting = window.setUserSetting || function() {};
+  window.deleteUserSetting = window.deleteUserSetting || function() {};
+  window.wp.getUserSetting = window.wp.getUserSetting || window.getUserSetting;
+  window.wp.setUserSetting = window.wp.setUserSetting || window.setUserSetting;
+  window.wp.deleteUserSetting = window.wp.deleteUserSetting || window.deleteUserSetting;
 })();
 </script>`;
 }
