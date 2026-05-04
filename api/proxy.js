@@ -123,6 +123,20 @@ function isPrivateWordPressPath(pathname) {
   );
 }
 
+function isLoginPath(pathname) {
+  const normalizedPathname = pathname.toLowerCase();
+  return (
+    normalizedPathname.startsWith("/login") ||
+    normalizedPathname.startsWith("/wp-login.php")
+  );
+}
+
+function hasWordPressTestCookie(cookies) {
+  return cookies.some((cookie) =>
+    cookie.toLowerCase().startsWith("wordpress_test_cookie=")
+  );
+}
+
 module.exports = async function proxy(req, res) {
   const publicOrigin = getPublicOrigin(req);
   const targetUrl = getTargetUrl(req);
@@ -153,6 +167,12 @@ module.exports = async function proxy(req, res) {
   });
 
   const cookies = getSetCookieHeaders(upstream.headers).map(rewriteSetCookie);
+
+  if (isLoginPath(proxyPath) && !hasWordPressTestCookie(cookies)) {
+    cookies.push(
+      "wordpress_test_cookie=WP%20Cookie%20check; Path=/; Secure; SameSite=Lax"
+    );
+  }
 
   if (cookies.length > 0) {
     res.setHeader("set-cookie", cookies);
