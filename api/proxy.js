@@ -112,11 +112,14 @@ function rewriteSetCookie(cookie) {
 }
 
 function isPrivateWordPressPath(pathname) {
+  const normalizedPathname = pathname.toLowerCase();
+
   return (
-    pathname.startsWith("/wp-login.php") ||
-    pathname.startsWith("/wp-admin") ||
-    pathname.startsWith("/wp-json") ||
-    pathname.startsWith("/xmlrpc.php")
+    normalizedPathname.startsWith("/login") ||
+    normalizedPathname.startsWith("/wp-login.php") ||
+    normalizedPathname.startsWith("/wp-admin") ||
+    normalizedPathname.startsWith("/wp-json") ||
+    normalizedPathname.startsWith("/xmlrpc.php")
   );
 }
 
